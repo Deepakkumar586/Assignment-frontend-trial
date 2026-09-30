@@ -1,10 +1,13 @@
+import { formatPrice } from "@/lib/format";
+
 interface SpecialCalloutProps {
   soldOut: boolean;
   title: string;
   blurb: string;
+  price?: number;
 }
 
-export function SpecialCallout({ soldOut, title, blurb }: SpecialCalloutProps) {
+export function SpecialCallout({ soldOut, title, blurb, price }: SpecialCalloutProps) {
   return (
     <aside
       aria-label="Today's special"
@@ -25,7 +28,9 @@ export function SpecialCallout({ soldOut, title, blurb }: SpecialCalloutProps) {
         <span
           aria-hidden="true"
           className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${
-            soldOut ? "bg-white text-[#8A7A6D] ring-1 ring-[#E3D6CA]" : "bg-white/15 text-white ring-1 ring-white/25"
+            soldOut
+              ? "bg-white text-[#8A7A6D] ring-1 ring-[#E3D6CA]"
+              : "bg-white/15 text-white ring-1 ring-white/25"
           }`}
         >
           {soldOut ? (
@@ -42,7 +47,7 @@ export function SpecialCallout({ soldOut, title, blurb }: SpecialCalloutProps) {
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-            <p className={`text-sm font-semibold ${soldOut ? "text-[#6B5D52]" : "text-white/90"}`}>
+            <p className={`text-sm font-semibold ${soldOut ? "text-[#6B5D52]" : "text-white"}`}>
               Today&apos;s special
             </p>
             <span
@@ -56,17 +61,28 @@ export function SpecialCallout({ soldOut, title, blurb }: SpecialCalloutProps) {
             </span>
           </div>
 
-          <h2
-            className={`mt-2 font-display text-2xl font-bold leading-tight sm:text-3xl ${
-              soldOut ? "text-[#6B5D52] line-through decoration-[#A39383] decoration-2" : ""
-            }`}
-          >
-            {title}
-          </h2>
+          <div className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            <h2
+              className={`font-display text-2xl font-bold leading-tight sm:text-3xl ${
+                soldOut ? "text-[#6B5D52] line-through decoration-[#A39383] decoration-2" : ""
+              }`}
+            >
+              {title}
+            </h2>
+            {price !== undefined && (
+              <p
+                className={`font-display text-xl font-bold ${
+                  soldOut ? "text-[#6B5D52]" : "text-white"
+                }`}
+              >
+                {formatPrice(price)}
+              </p>
+            )}
+          </div>
 
-          <p className={`mt-2 max-w-2xl text-[15px] leading-7 ${soldOut ? "text-[#5F544B]" : "text-white/90"}`}>
+          <p className={`mt-2 max-w-2xl text-[15px] leading-7 ${soldOut ? "text-[#5F544B]" : "text-white"}`}>
             {soldOut
-              ? "Our chef's pick has sold out for today. We’ll have a fresh batch another morning."
+              ? "Our chef\u2019s pick has sold out for today. We\u2019ll have a fresh batch another morning."
               : blurb}
           </p>
         </div>

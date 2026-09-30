@@ -12,6 +12,11 @@ export function CategoryNav({ categories }: CategoryNavProps) {
   const [edges, setEdges] = useState({ start: false, end: false });
   const scrollerRef = useRef<HTMLDivElement>(null);
 
+  // The filter can hide the active category, so fall back to the first visible one.
+  const currentId = categories.some((category) => category.id === activeId)
+    ? activeId
+    : (categories[0]?.id ?? "");
+
   const updateEdges = useCallback(() => {
     const scroller = scrollerRef.current;
     if (!scroller) return;
@@ -30,14 +35,9 @@ export function CategoryNav({ categories }: CategoryNavProps) {
           .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
-        if (visible?.target.id) {
-          setActiveId(visible.target.id);
-        }
+        if (visible?.target.id) setActiveId(visible.target.id);
       },
-      {
-        rootMargin: "-120px 0px -65% 0px",
-        threshold: [0.1, 0.3, 0.6]
-      }
+      { rootMargin: "-120px 0px -65% 0px", threshold: [0.1, 0.3, 0.6] }
     );
 
     sections.forEach((section) => observer.observe(section));
@@ -46,20 +46,20 @@ export function CategoryNav({ categories }: CategoryNavProps) {
 
   useEffect(() => {
     const scroller = scrollerRef.current;
-    const active = scroller?.querySelector<HTMLElement>(`[data-id="${activeId}"]`);
+    const active = scroller?.querySelector<HTMLElement>(`[data-id="${currentId}"]`);
     if (!scroller || !active) return;
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const left = active.offsetLeft - (scroller.clientWidth - active.clientWidth) / 2;
 
     scroller.scrollTo({ left, behavior: reduceMotion ? "auto" : "smooth" });
-  }, [activeId]);
+  }, [currentId]);
 
   useEffect(() => {
     updateEdges();
     window.addEventListener("resize", updateEdges);
     return () => window.removeEventListener("resize", updateEdges);
-  }, [updateEdges]);
+  }, [categories, updateEdges]);
 
   return (
     <nav
@@ -73,7 +73,7 @@ export function CategoryNav({ categories }: CategoryNavProps) {
           className="category-scroll relative flex snap-x gap-2 overflow-x-auto px-4 py-2.5 sm:px-6 lg:px-8"
         >
           {categories.map((category) => {
-            const active = activeId === category.id;
+            const active = currentId === category.id;
 
             return (
               <a

@@ -1,30 +1,37 @@
 import type { RestaurantHours } from "@/types/menu";
 
-export const weekdayKeys: Array<keyof RestaurantHours> = [
-  "sunday",
+export type Weekday = keyof RestaurantHours;
+
+export interface Clock {
+  day: Weekday;
+  minutes: number;
+}
+
+export const weekdayKeys: ReadonlyArray<Weekday> = [
   "monday",
   "tuesday",
   "wednesday",
   "thursday",
   "friday",
-  "saturday"
+  "saturday",
+  "sunday"
 ];
 
-export function getLisbonTime(date: Date) {
-  const parts = new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Europe/Lisbon",
-    weekday: "long",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false
-  }).formatToParts(date);
+const formatter = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Europe/Lisbon",
+  weekday: "long",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23"
+});
 
-  const weekday = parts.find((part) => part.type === "weekday")?.value.toLowerCase();
-  const hour = Number(parts.find((part) => part.type === "hour")?.value);
-  const minute = Number(parts.find((part) => part.type === "minute")?.value);
+export function getLisbonTime(date: Date): Clock {
+  const parts = formatter.formatToParts(date);
+  const read = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)?.value ?? "";
 
-  return {
-    day: weekdayKeys.find((key) => key === weekday) ?? "tuesday",
-    minutes: hour * 60 + minute
-  };
+  const weekday = read("weekday").toLowerCase();
+  const day = weekdayKeys.find((key) => key === weekday) ?? "monday";
+
+  return { day, minutes: Number(read("hour")) * 60 + Number(read("minute")) };
 }

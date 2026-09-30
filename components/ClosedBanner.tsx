@@ -1,11 +1,14 @@
 interface ClosedBannerProps {
+  scope: "today" | "now";
   nextOpening: string;
   hoursHref?: string;
 }
 
-export function ClosedBanner({ nextOpening, hoursHref = "#hours-title" }: ClosedBannerProps) {
+export function ClosedBanner({ scope, nextOpening, hoursHref = "#hours" }: ClosedBannerProps) {
+  const headline = scope === "today" ? "We\u2019re closed today." : "We\u2019re closed right now.";
+
   return (
-    <div role="status" className="border-b border-[#E3D6CA] bg-[#F2EBE4]">
+    <div role="status" className="no-print border-b border-[#E3D6CA] bg-[#F2EBE4]">
       <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-6 lg:px-8">
         <div className="flex items-start gap-3 sm:items-center">
           <span
@@ -27,7 +30,7 @@ export function ClosedBanner({ nextOpening, hoursHref = "#hours-title" }: Closed
           </span>
 
           <p className="text-sm leading-snug text-[#2B221C]">
-            <span className="font-bold">We&apos;re closed today.</span>{" "}
+            <span className="font-bold">{headline}</span>{" "}
             <span className="block text-[#5F544B] sm:inline">
               We&apos;ll be ready for you{" "}
               <span className="font-semibold text-[#2B221C]">{nextOpening}</span>.
@@ -37,7 +40,7 @@ export function ClosedBanner({ nextOpening, hoursHref = "#hours-title" }: Closed
 
         <a
           href={hoursHref}
-          className="ml-11 inline-flex w-fit items-center gap-1 rounded-md text-sm font-semibold text-[#8A3F06] underline decoration-[#B45309]/40 underline-offset-4 transition-colors hover:text-[#B45309] hover:decoration-[#B45309] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B45309] sm:ml-0 sm:shrink-0"
+          className="ml-11 inline-flex min-h-11 w-fit items-center rounded-md text-sm font-semibold text-[#8A3F06] underline decoration-[#B45309]/40 underline-offset-4 transition-colors hover:text-[#B45309] hover:decoration-[#B45309] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B45309] sm:ml-0 sm:shrink-0"
         >
           See opening hours
         </a>

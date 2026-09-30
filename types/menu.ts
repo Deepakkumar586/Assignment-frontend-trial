@@ -45,3 +45,5 @@ export interface MenuData {
 }
 
 export type DemoState = "open" | "closed" | "special-sold-out";
+
+export type DietFilter = "all" | Extract<MenuTag, "V" | "GF">;

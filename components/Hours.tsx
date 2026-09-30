@@ -1,3 +1,4 @@
+import { isClosedValue } from "@/lib/hours";
 import type { RestaurantHours } from "@/types/menu";
 
 interface HoursProps {
@@ -15,17 +16,15 @@ const days: Array<[keyof RestaurantHours, string]> = [
   ["sunday", "Sunday"]
 ];
 
-const isClosedValue = (value: string) => value.trim().toLowerCase() === "closed";
-
 export function Hours({ hours, highlightedDay }: HoursProps) {
-  const todayLabel = days.find(([key]) => key === highlightedDay)?.[1];
   const todayHours = hours[highlightedDay];
   const todayClosed = isClosedValue(todayHours);
 
   return (
     <section
+      id="hours"
       aria-labelledby="hours-title"
-      className="overflow-hidden rounded-3xl border border-[#E8DED2] bg-[#FFFDFC]"
+      className="scroll-mt-24 overflow-hidden rounded-3xl border border-[#E8DED2] bg-[#FFFDFC]"
     >
       <div className="flex flex-col gap-4 border-b border-[#EEE5DC] p-6 sm:flex-row sm:items-end sm:justify-between sm:p-8">
         <h2 id="hours-title" className="font-display text-3xl font-bold text-[#2B221C]">
@@ -41,7 +40,7 @@ export function Hours({ hours, highlightedDay }: HoursProps) {
             aria-hidden="true"
             className={`h-2 w-2 rounded-full ${todayClosed ? "bg-[#A39383]" : "bg-[#B45309]"}`}
           />
-          {todayClosed ? `Closed ${todayLabel}` : `Today ${todayHours}`}
+          {todayClosed ? "Closed today" : `Today ${todayHours}`}
         </div>
       </div>
 
@@ -77,7 +76,7 @@ export function Hours({ hours, highlightedDay }: HoursProps) {
               <dt
                 className={`text-[15px] ${
                   isClosed
-                    ? "text-[#9A8B7E]"
+                    ? "text-[#6D625A]"
                     : isToday
                       ? "font-bold text-[#2B221C]"
                       : "text-[#4E443D]"
@@ -89,7 +88,7 @@ export function Hours({ hours, highlightedDay }: HoursProps) {
 
               <dd className="text-[15px] tabular-nums">
                 {isClosed ? (
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#E3D9CF] bg-white px-3 py-1 text-[13px] font-semibold text-[#7A6B5F]">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#E3D9CF] bg-white px-3 py-1 text-[13px] font-semibold text-[#6B5D52]">
                     <svg
                       aria-hidden="true"
                       viewBox="0 0 16 16"
@@ -118,6 +117,8 @@ export function Hours({ hours, highlightedDay }: HoursProps) {
           );
         })}
       </dl>
+
+      <p className="px-6 pb-5 text-xs text-[#6B5F55] sm:px-8">All times are Lisbon local time.</p>
     </section>
   );
 }

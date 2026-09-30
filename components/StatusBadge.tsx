@@ -12,7 +12,6 @@ export function StatusBadge({ open, label }: StatusBadgeProps) {
           ? "border-[#BFD1C0] bg-[#EEF5EF] text-[#3F6144]"
           : "border-[#E1D4C8] bg-[#F4EEE8] text-[#6D625A]"
       }`}
-      aria-label={label ?? (open ? "Open now" : "Closed now")}
     >
       <span
         aria-hidden="true"
